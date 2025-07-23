@@ -1,45 +1,42 @@
-local v0 = getrenv()
-for v1, v2 in pairs(v0) do
-    if ((typeof(v2) ~= "function") and (typeof(v2) ~= "Instance")) then
-        pcall(function()
-            v0[v1] = nil
-        end)
-    end
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function localKick(reason)
+    -- Tworzymy GUI
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.ResetOnSpawn = false
+    screenGui.Name = "LocalKickGui"
+    screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0.4, 0, 0.3, 0)
+    frame.Position = UDim2.new(0.3, 0, 0.35, 0)
+    frame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    frame.BorderSizePixel = 0
+    frame.Parent = screenGui
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Text = "Zostałeś wyrzucony:\n" .. reason
+    textLabel.Size = UDim2.new(1, 0, 0.7, 0)
+    textLabel.Position = UDim2.new(0, 0, 0, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.TextScaled = true
+    textLabel.Parent = frame
+
+    local button = Instance.new("TextButton")
+    button.Text = "Wyjdź z gry"
+    button.Size = UDim2.new(1, 0, 0.3, 0)
+    button.Position = UDim2.new(0, 0, 0.7, 0)
+    button.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    button.TextColor3 = Color3.new(1, 1, 1)
+    button.TextScaled = true
+    button.Parent = frame
+
+    button.MouseButton1Click:Connect(function()
+        game:Shutdown() -- tylko działa w lokalnym testowaniu
+    end)
 end
 
-for v3, v4 in pairs(getgc(true)) do
-    if (typeof(v4) == "table" and not istable(readonly)) then
-        pcall(function()
-            for v10 in pairs(v4) do
-                v4[v10] = nil
-            end
-        end)
-    end
-end
-
-task.delay(10, function()
-    local v5 = 0
-    local v6
-    local v7
-    while true do
-        if (v5 == 1) then
-            v7:Kick("Ban 365 Reason Cheating.") 
-            break
-        end
-        if (v5 == 0) then
-            local v9 = 0
-            while true do
-                if (v9 == 0) then
-                    v6 = game:GetService("Players")
-                    v7 = v6.LocalPlayer
-                    v9 = 1
-                end
-                if (v9 == 1) then
-                    v5 = 1
-                    break
-                end
-            end
-        end
-    end
-end)
-   
+-- Wywołanie (przykład):
+localKick("Naruszenie zasad: używanie exploita")
